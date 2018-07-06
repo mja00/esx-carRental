@@ -1,10 +1,14 @@
+ESX = nil
+
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+
 RegisterServerEvent("chargePlayer")
 AddEventHandler("chargePlayer", function(chargeAmount)
-	TriggerEvent("es:getPlayerFromId", source, function(user)
-		user.removeMoney(chargeAmount)
-		CancelEvent()
-	end)
+     local xPlayer        = ESX.GetPlayerFromId(source)
+     xPlayer.removeMoney(chargeAmount)
+     CancelEvent()
 end)
+
 RegisterServerEvent("devAddPlayer")
 AddEventHandler("devAddPlayer", function(devAddAmount)
 	TriggerEvent("es:getPlayerFromId", source, function(user)
