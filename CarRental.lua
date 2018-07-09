@@ -406,5 +406,33 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
+local blips = {
+	{title="Car Rental", colour=2, id=198, x = -902.26593017578, y = -2327.3703613281, z = 5.7090311050415},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 241.49575805664, y = -756.84222412109, z = 29.82596206665},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 19.39, y = 6334.73, z = 30.24},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 1459.65, y = 3735.7, z = 32.51},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 394.15, y = -1660.44, z = 26.31},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 604.92, y = 105.35, z = 91.89},
+	{title="Car Rental Drop Off", colour=1, id=198, x = -791.74, y = 332.14, z = 84.7},
+	{title="Car Rental Drop Off", colour=1, id=198, x = -1179.45, y = -731.2, z = 19.5},
+	{title="Car Rental Drop Off", colour=1, id=198, x = -914.16, y = -160.85, z = 40.88},
+	{title="Car Rental Drop Off", colour=1, id=198, x = -903.59967041016, y = -2310.703125, z = 5.7090353965759},
+
+  }
+
+Citizen.CreateThread(function()
+
+    for _, info in pairs(blips) do
+      info.blip = AddBlipForCoord(info.x, info.y, info.z)
+      SetBlipSprite(info.blip, info.id)
+      SetBlipDisplay(info.blip, 4)
+      SetBlipScale(info.blip, 0.9)
+      SetBlipColour(info.blip, info.colour)
+      SetBlipAsShortRange(info.blip, true)
+	  BeginTextCommandSetBlipName("STRING")
+      AddTextComponentString(info.title)
+      EndTextCommandSetBlipName(info.blip)
+    end
+end)
 
 						
