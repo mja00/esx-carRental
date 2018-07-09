@@ -1,20 +1,22 @@
+rentalTimer = .5 --How often a player should be charged in Minutes
+isBeingCharged = false
+autoChargeAmount = 100 -- How much a player should be charged each time
+ESX = nil
+devMode = false
+damageInsurance = false
+damageCharge = false
+canBeCharged = false
+--handCuffed = false
+arrestCheckAlreadyRan = false
+isInPrison = false
+isBlipCreated = false
+
+
 Citizen.CreateThread(function()
 	local items = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" }
 	local currentItemIndex = 1
 	local selectedItemIndex = 1
 	local checkBox = true
-	rentalTimer = 5 --How often a player should be charged in Minutes
-	isBeingCharged = false
-	autoChargeAmount = 100
-	ESX = nil
-	devMode = false
-	damageInsurance = false
-	damageCharge = false
-	canBeCharged = false
-	--handCuffed = false
-	arrestCheckAlreadyRan = false
-	isInPrison = false
-	isBlipCreated = false
 	
 	pickupStation = { --Set the car rental locaitons here
 		{x = -902.26593017578, y = -2327.3703613281, z = 5.7090311050415},		--Airport car rental place
@@ -257,7 +259,10 @@ Citizen.CreateThread(function()
 		end
 		
 		if (isInReturnMarker and not WarMenu.IsMenuOpened('carReturn')) then
-			WarMenu.OpenMenu('carReturn')
+			local plate = GetVehicleNumberPlateText(GetVehiclePedIsIn(GetPlayerPed(-1), false))
+			if plate == " RENTAL " then
+				WarMenu.OpenMenu('carReturn')
+			end
 		end
 		
 		if (not isInReturnMarker and not devMode and not isInMarker) then
@@ -281,13 +286,16 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 		local currentVehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
-		if (IsVehicleDamaged(currentVehicle) and damageInsurance == false and damageCharge == false and canBeCharged == true) then
-			damageCharge = true
-			TriggerServerEvent("chargePlayer", 500)
-			ESX.ShowNotification("You've been charged $500 for damaging the car. Buying insurance will keep you from being charged.")
-		elseif (damageInsurance == true and IsVehicleDamaged(currentVehicle) and damageCharge == false) then
-			ESX.ShowNotification("You've damaged your vehicle but due to the insurance you won't be charged.")
-			damageCharge = true
+		local plate = GetVehicleNumberPlateText(currentVehicle)
+		if plate == " RENTAL " then
+			if (IsVehicleDamaged(currentVehicle) and damageInsurance == false and damageCharge == false and canBeCharged == true) then
+				damageCharge = true
+				TriggerServerEvent("chargePlayer", 500)
+				ESX.ShowNotification("You've been charged $500 for damaging the car. Buying insurance will keep you from being charged.")
+			elseif (damageInsurance == true and IsVehicleDamaged(currentVehicle) and damageCharge == false) then
+				ESX.ShowNotification("You've damaged your vehicle but due to the insurance you won't be charged.")
+				damageCharge = true
+			end
 		end
 	end
 end)
@@ -296,9 +304,8 @@ end)
 --Auto charge player every 5 minutes
 Citizen.CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Citizen.Wait(rentalTimer*60*1000)
 		if isBeingCharged == true then
-			Citizen.Wait(rentalTimer*60*1000)
 			TriggerServerEvent("chargePlayer", autoChargeAmount)
 			ESX.ShowNotification("You've been charged $" .. autoChargeAmount .. " on another day of your rental. Return the vehicle to stop the fees.")
 		end
