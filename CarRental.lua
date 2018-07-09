@@ -1,3 +1,45 @@
+function SendNotification(options)
+    options.animation = options.animation or {}
+    options.sounds = options.sounds or {}
+    options.docTitle = options.docTitle or {}
+
+    local options = {
+        type = options.type or "info",
+        layout = options.layout or "centerleft",
+        theme = options.theme or "metroui",
+        text = options.text or "Empty Notification",
+        timeout = options.timeout or 5000,
+        progressBar = options.progressBar ~= false and true or false,
+        closeWith = options.closeWith or {},
+        animation = {
+            open = options.animation.open or "gta_effects_open",
+            close = options.animation.close or "gta_effects_close"
+        },
+        sounds = {
+            volume = options.sounds.volume or 1,
+            conditions = options.sounds.conditions or {},
+            sources = options.sounds.sources or {}
+        },
+        docTitle = {
+            conditions = options.docTitle.conditions or {}
+        },
+        modal = options.modal or false,
+        id = options.id or false,
+        force = options.force or false,
+        queue = options.queue or "global",
+
+        killer = options.killer or false,
+        container = options.container or false,
+        buttons = options.button or false
+    }
+
+    SendNUIMessage({options = options})
+end
+
+RegisterNetEvent("pNotify:SendNotification")
+AddEventHandler("pNotify:SendNotification", function(options)
+    SendNotification(options)
+end)
 rentalTimer = .5 --How often a player should be charged in Minutes
 isBeingCharged = false
 autoChargeAmount = 100 -- How much a player should be charged each time
@@ -52,6 +94,7 @@ Citizen.CreateThread(function()
 	WarMenu.SetSubTitle('arrestCheck', 'Are you currently being arrested?')
 	
 	while true do
+	while true do
 		--Main menu
 		if WarMenu.IsMenuOpened('carRental') then
 			if WarMenu.MenuButton('Rent a car', 'carPicker') then
@@ -100,35 +143,35 @@ Citizen.CreateThread(function()
 			if WarMenu.Button('Glendale | Upfront: $100 | Daily: $100') then
 				SpawnVehicle("glendale")
 				TriggerServerEvent("chargePlayer", 100)
-				ESX.ShowNotification("You've been charged $100 for your rental.")
+				exports.pNotify:SendNotification({text = "Car Rental: You've been charged $100 for your rental. ", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 				autoChargeAmount = 100
 				isBeingCharged = true
 				WarMenu.CloseMenu()
 			elseif WarMenu.Button('Blista | Upfront: $200 | Daily: $100') then
 				SpawnVehicle("blista2")
 				TriggerServerEvent("chargePlayer", 200)
-				ESX.ShowNotification("You've been charged $200 for your rental.")
+				exports.pNotify:SendNotification({text = "Car Rental: You've been charged $200 for your rental. ", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 				autoChargeAmount = 100
 				isBeingCharged = true
 				WarMenu.CloseMenu()
 			elseif WarMenu.Button('Primo | Upfront: $100 | Daily: $100') then
 				SpawnVehicle("primo")
 				TriggerServerEvent("chargePlayer", 100)
-				ESX.ShowNotification("You've been charged $100 for your rental.")
+				exports.pNotify:SendNotification({text = "Car Rental: You've been charged $100 for your rental. ", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 				autoChargeAmount = 100
 				isBeingCharged = true
 				WarMenu.CloseMenu()
 			elseif WarMenu.Button('Intruder | Upfront: $250 | Daily: $100') then
 				SpawnVehicle("intruder")
 				TriggerServerEvent("chargePlayer", 250)
-				ESX.ShowNotification("You've been charged $250 for your rental.")
+				exports.pNotify:SendNotification({text = "Car Rental: You've been charged $250 for your rental. ", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 				autoChargeAmount = 100
 				isBeingCharged = true
 				WarMenu.CloseMenu()
 			elseif WarMenu.Button('Banshee | Upfront: $1000 | Daily: $300') then
 				SpawnVehicle("banshee")
 				TriggerServerEvent("chargePlayer", 1000)
-				ESX.ShowNotification("You've been charged $1000 for your rental.")
+				exports.pNotify:SendNotification({text = "Car Rental: You've been charged $1000 for your rental. ", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 				autoChargeAmount = 300
 				isBeingCharged = true
 				WarMenu.CloseMenu()
@@ -153,7 +196,7 @@ Citizen.CreateThread(function()
 			if WarMenu.Button('Yes | $200') then
 				TriggerServerEvent("chargePlayer", 200)
 				damageInsurance = true
-				ESX.ShowNotification("Thank you for purchasing damage insurance")
+				exports.pNotify:SendNotification({text = "Car Rental: Thank you for purchasing damage insurance", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 				WarMenu.CloseMenu()
 			elseif WarMenu.MenuButton('No', 'carRental') then
 			end
@@ -167,7 +210,7 @@ Citizen.CreateThread(function()
 				damageInsurance = false
 				damageCharge = false
 				arrestCheckAlreadyRan = true
-				ESX.ShowNotification('We have cancelled your rental.')
+				exports.pNotify:SendNotification({text = "Car Rental: We have cancelled your rental.", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 				WarMenu.CloseMenu()
 			elseif WarMenu.Button('No') then
 				WarMenu.CloseMenu()
@@ -291,9 +334,10 @@ Citizen.CreateThread(function()
 			if (IsVehicleDamaged(currentVehicle) and damageInsurance == false and damageCharge == false and canBeCharged == true) then
 				damageCharge = true
 				TriggerServerEvent("chargePlayer", 500)
-				ESX.ShowNotification("You've been charged $500 for damaging the car. Buying insurance will keep you from being charged.")
+			    exports.pNotify:SendNotification({text = "Car Rental: You've been charged $500 for damaging the car. Buying insurance will keep you from being charged.", layout = "centerLeft", theme = options.theme, type = "success ", timeout = math.random(1000, 10000)})
+				exports.pNotify:SendNotification({text = "Car Rental: We have cancelled your rental.", layout = "centerLeft", theme = options.theme, type = "success ", timeout = math.random(1000, 10000)})
 			elseif (damageInsurance == true and IsVehicleDamaged(currentVehicle) and damageCharge == false) then
-				ESX.ShowNotification("You've damaged your vehicle but due to the insurance you won't be charged.")
+				exports.pNotify:SendNotification({text = "Car Rental: You've damaged your vehicle but due to the insurance you won't be charged.", layout = "centerLeft", theme = options.theme, type = "error", timeout = math.random(1000, 10000)})
 				damageCharge = true
 			end
 		end
@@ -307,7 +351,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(rentalTimer*60*1000)
 		if isBeingCharged == true then
 			TriggerServerEvent("chargePlayer", autoChargeAmount)
-			ESX.ShowNotification("You've been charged $" .. autoChargeAmount .. " on another day of your rental. Return the vehicle to stop the fees.")
+			exports.pNotify:SendNotification({text = "Car Rental: "" You've been charged $" .. autoChargeAmount .. " on another day of your rental. Return the vehicle to stop the fees.", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 		end
 	end
 end)
@@ -338,7 +382,7 @@ function returnVehicle()
 			isBeingCharged = false
 			damageInsurance = false
 			damageCharge = false
-			ESX.ShowNotification("Thank you for returning your rental. Please come again!")
+			exports.pNotify:SendNotification({text = "Car Rental: Thank you for returning your rental. Please come again!", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 			local currentVehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
 			SetEntityAsMissionEntity(currentVehicle, true, true)
 			local x, y, z = table.unpack(GetEntityCoords(GetPlayerPed(-1), false))
@@ -354,13 +398,41 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		if(GetDistanceBetweenCoords(coords, 1677.2429199219, 2658.6179199219, 44.560031890869, true) < 2.75 and isInPrison == false) then
 			isInPrison = true
-			ESX.ShowNotification("Our records show that you are currently in prison.")
-			ESX.ShowNotification("We've taken the liberty to cancel the rental.")
+                        exports.pNotify:SendNotification({text = "Car Rental: Our records show that you are currently in prison.", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
+			exports.pNotify:SendNotification({text = "Car Rental: We've taken the liberty to cancel the rental.", layout = "centerLeft", theme = options.theme, type = "info", timeout = math.random(1000, 10000)})
 			isBeingCharged = false
 			damageInsurance = false
 			damageCharge = false
 		end
 	end
+end)
+local blips = {
+	{title="Car Rental", colour=2, id=198, x = -902.26593017578, y = -2327.3703613281, z = 5.7090311050415},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 241.49575805664, y = -756.84222412109, z = 29.82596206665},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 19.39, y = 6334.73, z = 30.24},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 1459.65, y = 3735.7, z = 32.51},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 394.15, y = -1660.44, z = 26.31},
+	{title="Car Rental Drop Off", colour=1, id=198, x = 604.92, y = 105.35, z = 91.89},
+	{title="Car Rental Drop Off", colour=1, id=198, x = -791.74, y = 332.14, z = 84.7},
+	{title="Car Rental Drop Off", colour=1, id=198, x = -1179.45, y = -731.2, z = 19.5},
+	{title="Car Rental Drop Off", colour=1, id=198, x = -914.16, y = -160.85, z = 40.88},
+	{title="Car Rental Drop Off", colour=1, id=198, x = -903.59967041016, y = -2310.703125, z = 5.7090353965759},
+
+  }
+
+Citizen.CreateThread(function()
+
+    for _, info in pairs(blips) do
+      info.blip = AddBlipForCoord(info.x, info.y, info.z)
+      SetBlipSprite(info.blip, info.id)
+      SetBlipDisplay(info.blip, 4)
+      SetBlipScale(info.blip, 0.9)
+      SetBlipColour(info.blip, info.colour)
+      SetBlipAsShortRange(info.blip, true)
+	  BeginTextCommandSetBlipName("STRING")
+      AddTextComponentString(info.title)
+      EndTextCommandSetBlipName(info.blip)
+    end
 end)
 
 						
