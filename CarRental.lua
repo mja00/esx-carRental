@@ -42,20 +42,20 @@ Citizen.CreateThread(function()
 		Citizen.Wait(0)
     end
 	
-	WarMenu.CreateMenu('carRental', 'Car Rental')
-	WarMenu.CreateSubMenu('closeMenu', 'carRental', 'Are you sure?')
-	WarMenu.CreateSubMenu('carPicker', 'carRental', 'Pick a car | 1 day about ' .. rentalTimer ..  ' minutes')
-	WarMenu.CreateSubMenu('carInsurance', 'carRental', 'Want to buy car insurance?')
-	WarMenu.CreateMenu('carReturn', 'Car Return')
-	WarMenu.SetSubTitle('carReturn', 'Are you going to return the car?') 
-	WarMenu.CreateMenu('arrestCheck', 'Car Rental')
-	WarMenu.SetSubTitle('arrestCheck', 'Are you currently being arrested?')
+	WarMenu.CreateMenu('carRental', _U('car_rental_menu'))
+	WarMenu.CreateSubMenu('closeMenu', 'carRental', _U('car_rental_menu_close'))
+	WarMenu.CreateSubMenu('carPicker', 'carRental', _U('car_rental_menu_car_picker', rentalTimer))
+	WarMenu.CreateSubMenu('carInsurance', 'carRental', _U('car_rental_menu_insurance'))
+	WarMenu.CreateMenu('carReturn', _U('car_rental_menu_return'))
+	WarMenu.SetSubTitle('carReturn', _U('car_rental_menu_return_going')) 
+	WarMenu.CreateMenu('arrestCheck', _U('car_rental_menu'))
+	WarMenu.SetSubTitle('arrestCheck', _U('car_rental_menu_arrest'))
 	
 	while true do
 		--Main menu
 		if WarMenu.IsMenuOpened('carRental') then
-			if WarMenu.MenuButton('Rent a car', 'carPicker') then
-			elseif WarMenu.MenuButton('Car Insurance', 'carInsurance') then
+			if WarMenu.MenuButton(_U('car_rental_menu_do_rent'), 'carPicker') then
+			elseif WarMenu.MenuButton(_U('car_rental_menu_do_insurance'), 'carInsurance') then
 			--elseif WarMenu.Button('DEV: Return car') then
 			--	returnVehicle()
 			--elseif WarMenu.Button('DEV: Delete car') then
@@ -82,67 +82,67 @@ Citizen.CreateThread(function()
 			--	SetEntityCoords(GetPlayerPed(-1), -902.26593017578, -2327.3703613281, 5.7090311050415)
 			--elseif WarMenu.MenuButton('Exit', 'closeMenu') then
 			end
-			WarMenu.SetSubTitle('carRental', 'Rent a car for a fee')
+			WarMenu.SetSubTitle('carRental', _U('car_rental_menu_do_rent_fee'))
 			
 			WarMenu.Display()
 			
 		--Close menu
 		elseif WarMenu.IsMenuOpened('closeMenu') then
-			if WarMenu.Button('Yes') then
+			if WarMenu.Button(_U('car_rental_menu_yes')) then
 				WarMenu.CloseMenu()
-			elseif WarMenu.MenuButton('No', 'carRental') then
+			elseif WarMenu.MenuButton(_U('car_rental_menu_no'), 'carRental') then
 			end
 			
 			WarMenu.Display()
 		
 		
 		elseif WarMenu.IsMenuOpened('carPicker') then
-			if WarMenu.Button('Glendale | Upfront: $100 | Daily: $100') then
+			if WarMenu.Button(_U('car_rental_menu_glendale', 100, 100)) then
 				SpawnVehicle("glendale")
 				TriggerServerEvent("chargePlayer", 100)
-				ESX.ShowNotification("You've been charged $100 for your rental.")
+				ESX.ShowNotification(_U('car_rental_menu_charged', 100))
 				autoChargeAmount = 100
 				isBeingCharged = true
 				WarMenu.CloseMenu()
-			elseif WarMenu.Button('Blista | Upfront: $200 | Daily: $100') then
+			elseif WarMenu.Button(_U('car_rental_menu_blista', 200, 100)) then
 				SpawnVehicle("blista2")
 				TriggerServerEvent("chargePlayer", 200)
-				ESX.ShowNotification("You've been charged $200 for your rental.")
+				ESX.ShowNotification(_U('car_rental_menu_charged', 200))
 				autoChargeAmount = 100
 				isBeingCharged = true
 				WarMenu.CloseMenu()
-			elseif WarMenu.Button('Primo | Upfront: $100 | Daily: $100') then
+			elseif WarMenu.Button(_U('car_rental_menu_primo', 100, 100)) then
 				SpawnVehicle("primo")
 				TriggerServerEvent("chargePlayer", 100)
-				ESX.ShowNotification("You've been charged $100 for your rental.")
+				ESX.ShowNotification(_U('car_rental_menu_charged', 100))
 				autoChargeAmount = 100
 				isBeingCharged = true
 				WarMenu.CloseMenu()
-			elseif WarMenu.Button('Intruder | Upfront: $250 | Daily: $100') then
+			elseif WarMenu.Button(_U('car_rental_menu_intruder', 250, 100)) then
 				SpawnVehicle("intruder")
 				TriggerServerEvent("chargePlayer", 250)
-				ESX.ShowNotification("You've been charged $250 for your rental.")
+				ESX.ShowNotification(_U('car_rental_menu_charged', 250))
 				autoChargeAmount = 100
 				isBeingCharged = true
 				WarMenu.CloseMenu()
-			elseif WarMenu.Button('Banshee | Upfront: $1000 | Daily: $300') then
+			elseif WarMenu.Button(_U('car_rental_menu_banshee', 1000, 300)) then
 				SpawnVehicle("banshee")
 				TriggerServerEvent("chargePlayer", 1000)
-				ESX.ShowNotification("You've been charged $1000 for your rental.")
+				ESX.ShowNotification(_U('car_rental_menu_charged', 1000))
 				autoChargeAmount = 300
 				isBeingCharged = true
 				WarMenu.CloseMenu()
-			elseif WarMenu.MenuButton('Back', 'carRental') then
+			elseif WarMenu.MenuButton(_U('car_rental_menu_back'), 'carRental') then
 			end
 			
 			WarMenu.Display()
 		
 		--Return car menu
 		elseif WarMenu.IsMenuOpened('carReturn') then
-			if WarMenu.Button('Yes') then
+			if WarMenu.Button(_U('car_rental_menu_yes')) then
 				returnVehicle()
 				WarMenu.CloseMenu()
-			elseif WarMenu.Button('No') then
+			elseif WarMenu.Button(_U('car_rental_menu_no')) then
 				WarMenu.CloseMenu()
 			end	
 			
@@ -150,26 +150,26 @@ Citizen.CreateThread(function()
 
 		--Car insurance menu
 		elseif WarMenu.IsMenuOpened('carInsurance') then
-			if WarMenu.Button('Yes | $200') then
+			if WarMenu.Button(_U('car_rental_menu_yes_fee', 200)) then
 				TriggerServerEvent("chargePlayer", 200)
 				damageInsurance = true
 				ESX.ShowNotification("Thank you for purchasing damage insurance")
 				WarMenu.CloseMenu()
-			elseif WarMenu.MenuButton('No', 'carRental') then
+			elseif WarMenu.MenuButton(_U('car_rental_menu_no'), 'carRental') then
 			end
 			
 			WarMenu.Display()
 		
 		--Arrest check menu
 		elseif WarMenu.IsMenuOpened('arrestCheck') then
-			if WarMenu.Button('Yes') then
+			if WarMenu.Button(_U('car_rental_menu_yes')) then
 				isBeingCharged = false
 				damageInsurance = false
 				damageCharge = false
 				arrestCheckAlreadyRan = true
-				ESX.ShowNotification('We have cancelled your rental.')
+				ESX.ShowNotification(_U('car_rental_canceled'))
 				WarMenu.CloseMenu()
-			elseif WarMenu.Button('No') then
+			elseif WarMenu.Button(_U('car_rental_menu_no')) then
 				WarMenu.CloseMenu()
 				arrestCheckAlreadyRan = true
 			end
@@ -202,7 +202,7 @@ Citizen.CreateThread(function()
       			SetBlipColour(pickupBlip, 2)
       			SetBlipAsShortRange(pickupBlip, true)
 	  			BeginTextCommandSetBlipName("STRING")
-      			AddTextComponentString("Car Rental")
+      			AddTextComponentString(_U('car_rental_point'))
       			EndTextCommandSetBlipName(pickupBlip)
 			end
 			for _, v in pairs(dropoffStation) do
@@ -213,7 +213,7 @@ Citizen.CreateThread(function()
       			SetBlipColour(pickupBlip, 1)
       			SetBlipAsShortRange(pickupBlip, true)
 	  			BeginTextCommandSetBlipName("STRING")
-      			AddTextComponentString("Car Dropoff")
+      			AddTextComponentString(_U('car_rental_dropoff_point'))
       			EndTextCommandSetBlipName(pickupBlip)
 			end
 			isBlipCreated = true
@@ -291,9 +291,9 @@ Citizen.CreateThread(function()
 			if (IsVehicleDamaged(currentVehicle) and damageInsurance == false and damageCharge == false and canBeCharged == true) then
 				damageCharge = true
 				TriggerServerEvent("chargePlayer", 500)
-				ESX.ShowNotification("You've been charged $500 for damaging the car. Buying insurance will keep you from being charged.")
+				ESX.ShowNotification(_U('car_rental_notif_damage_1', 100))
 			elseif (damageInsurance == true and IsVehicleDamaged(currentVehicle) and damageCharge == false) then
-				ESX.ShowNotification("You've damaged your vehicle but due to the insurance you won't be charged.")
+				ESX.ShowNotification(_U('car_rental_notif_damage_2'))
 				damageCharge = true
 			end
 		end
@@ -307,7 +307,7 @@ Citizen.CreateThread(function()
 		Citizen.Wait(rentalTimer*60*1000)
 		if isBeingCharged == true then
 			TriggerServerEvent("chargePlayer", autoChargeAmount)
-			ESX.ShowNotification("You've been charged $" .. autoChargeAmount .. " on another day of your rental. Return the vehicle to stop the fees.")
+			ESX.ShowNotification(_U('car_rental_notif_charge', autoChargeAmount))
 		end
 	end
 end)
@@ -338,7 +338,7 @@ function returnVehicle()
 			isBeingCharged = false
 			damageInsurance = false
 			damageCharge = false
-			ESX.ShowNotification("Thank you for returning your rental. Please come again!")
+			ESX.ShowNotification(_U('car_rental_notif_return'))
 			local currentVehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
 			SetEntityAsMissionEntity(currentVehicle, true, true)
 			local x, y, z = table.unpack(GetEntityCoords(GetPlayerPed(-1), false))
@@ -354,8 +354,8 @@ Citizen.CreateThread(function()
 		local coords = GetEntityCoords(GetPlayerPed(-1))
 		if(GetDistanceBetweenCoords(coords, 1677.2429199219, 2658.6179199219, 44.560031890869, true) < 2.75 and isInPrison == false) then
 			isInPrison = true
-			ESX.ShowNotification("Our records show that you are currently in prison.")
-			ESX.ShowNotification("We've taken the liberty to cancel the rental.")
+			ESX.ShowNotification(_U('car_rental_notif_prison_1'))
+			ESX.ShowNotification(_U('car_rental_notif_prison_2'))
 			isBeingCharged = false
 			damageInsurance = false
 			damageCharge = false
